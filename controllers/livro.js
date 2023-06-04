@@ -1,4 +1,10 @@
-const { getTodosLivros, getLivroId, insereLivro, modificaLivro, deletarLivroPorId } = require("../service/livro");
+const {
+  getTodosLivros,
+  getLivroId,
+  insereLivro,
+  modificaLivro,
+  deletarLivroPorId,
+} = require("../service/livro");
 
 //pega todos livros
 function getLivros(req, res) {
@@ -14,25 +20,29 @@ function getLivros(req, res) {
 //pega unico livro
 function getLivro(req, res) {
   try {
-    const id = req.params.id
-    const livro = getLivroId(id);
-    res.send(livro);
+    const id = req.params.id;
+
+    if (id && Number(id)) {
+      const livro = getLivroId(id);
+      res.send(livro);
+    } else {
+      res.status(422);
+      res.send("id inválido");
+    }
   } catch (error) {
     res.status(500);
     res.send(error.message);
   }
 }
 
-
-//criar novo livro 
+//criar novo livro
 function postLivro(req, res) {
   const livroNovo = req.body;
 
-  insereLivro(livroNovo)
-  res.status(201)
-  res.send('livro inserido com sucesso')
+  insereLivro(livroNovo);
+  res.status(201);
+  res.send("livro inserido com sucesso");
   try {
-    
   } catch (error) {
     res.status(500);
     res.send(error.message);
@@ -40,39 +50,47 @@ function postLivro(req, res) {
 }
 
 //editar um livro
-function patchLivro(req,res){
-
+function patchLivro(req, res) {
   try {
-    const id = req.params.id
-    const body = req.body;
+    const id = req.params.id;
+    if (id && Number(id)) {
+      const body = req.body;
 
-    modificaLivro(body, id)
+      modificaLivro(body, id);
 
-    res.send('item modificado com sucesso!!')
-    
+      res.send("item modificado com sucesso!!");
+    } else {
+      res.status(422);
+      res.send("id inválido");
+    }
   } catch (error) {
     res.status(500);
     res.send(error.message);
   }
 }
 
-//deletar um livro 
+//deletar um livro
 function deleteLivro(req, res) {
   try {
-      const id = req.params.id
-      deletarLivroPorId(id)
-      res.send("livro deletado com sucesso")
+    const id = req.params.id;
+    if (id && Number(id)) {
+          deletarLivroPorId(id);
+    res.send("livro deletado com sucesso");
+    } else{
+      res.status(422);
+      res.send("id inválido");
+    }
+
   } catch (error) {
-      res.status(500)
-      res.send(error.message)
+    res.status(500);
+    res.send(error.message);
   }
 }
 
-
 module.exports = {
   getLivros,
-  getLivro, 
-  postLivro, 
-  patchLivro, 
-  deleteLivro
+  getLivro,
+  postLivro,
+  patchLivro,
+  deleteLivro,
 };

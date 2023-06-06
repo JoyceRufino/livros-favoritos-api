@@ -38,10 +38,15 @@ function getLivro(req, res) {
 //criar novo livro
 function postLivro(req, res) {
   const livroNovo = req.body;
-
-  insereLivro(livroNovo);
+  if(req.body.nome){
+    insereLivro(livroNovo);
   res.status(201);
   res.send("livro inserido com sucesso");
+  } else {
+    res.status(422)
+    res.send('O campo nome é obrigatório!')
+  }
+  
   try {
   } catch (error) {
     res.status(500);
@@ -74,13 +79,12 @@ function deleteLivro(req, res) {
   try {
     const id = req.params.id;
     if (id && Number(id)) {
-          deletarLivroPorId(id);
-    res.send("livro deletado com sucesso");
-    } else{
+      deletarLivroPorId(id);
+      res.send("livro deletado com sucesso");
+    } else {
       res.status(422);
       res.send("id inválido");
     }
-
   } catch (error) {
     res.status(500);
     res.send(error.message);
